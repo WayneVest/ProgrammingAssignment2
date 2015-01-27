@@ -10,23 +10,32 @@
 ## NOTE: there are no metods to acutally calculate the inverse - it is assumed this is done correctly and passed-in correctly
 
 makeCacheMatrix <- function(x = matrix()) {
+    ## Because we are creating a new matrix, set the inital value to i as NULL
     i <- NULL
+
+    ## 'set' method to store the passed-in matrix
+    ## NOTE: if the makeCacheMatrix already existed, we need to revert i to equal NULL
     set <- function(y){
         x <<- y
         i <<- NULL
     }
+
+    ## mathod to retrieve value of the matrix
     get <- function(){
         x
     }
+
+    ## method to store the inverse of the matrix into i
     setInverse <- function(inverse) {
-        print("here")
         i <<- inverse
-        print(i)
-        print("done")
     }
+
+    ## Method to retrieve the inverse of the matrix from i
     getInverse <- function(){
         i
     }
+
+    ## Return values
     list(set = set, get = get, setInverse = setInverse, getInverse = getInverse)
 }
 
@@ -35,13 +44,20 @@ makeCacheMatrix <- function(x = matrix()) {
 ## NOTE: a makeCacheMatrix matrix is required as cacheSolve expects the passed-in data structre to have makeCacheMatrix methods
 
 cacheSolve <- function(x, ...) {
+    ## Fill i with the current inverse value
     i <- x$getInverse()
+
+    ## Test to see if there was an existing inverse value, and if so, return it
     if(!is.null(i)){
         message("getting cached data")
         return(i)
     }
+
+    ## Otherwise solve for the inverse and store it in i
     data <- x$get()
     i <- solve(data)
     x$setInverse(i)
+
+    ## Return value
     i
 }
